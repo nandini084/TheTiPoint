@@ -1,0 +1,240 @@
+import matplotlib.pyplot as plt
+#login IDs
+users = [{'username': 'user1', 'password': 'password1'},
+         {'username': 'user2', 'password': 'password2'},
+         {'username': 'user3', 'password': 'password3'}]  
+def authenticate(username, password):
+    for user in users:
+        if user['username'] == username and user['password'] == password:
+            return True
+    return False
+
+username = input("Enter username: ")
+password = input("Enter password: ")
+if authenticate(username, password):
+    print("Login successful!")
+else:
+    print("Login failed!")
+
+
+# Define dictionaries of ID prefixes and their corresponding designations
+vendor_prefixes = ['V']
+staff_prefixes = ['VF', 'RF']
+student_prefixes = ['BT', 'MT']
+
+# Function to determine the designation based on the ID
+def get_designation(id):
+    prefix = id[:2]
+    if prefix in vendor_prefixes:
+        return 'Vendor'
+    elif prefix in staff_prefixes:
+        return 'Staff'
+    elif prefix in student_prefixes:
+        return 'Student'
+    else:
+        return 'Invalid ID'
+#User authentication process
+id = input("Enter ID: ")
+designation = get_designation(id)
+print(f"The designation for ID {id} is: {designation}")
+
+# Function to identify food items using their codes
+def identify_food(code):
+    for name, data in menu.items():
+        if code == name[:2]:
+            return name
+    return 'Invalid food code'
+
+
+menu = {
+    'SWsandwich': {'price': 25.0, 'quantity': 200},
+    'PIpizza': {'price': 50.0, 'quantity': 350},
+    'SAsamosa': {'price': 7.0, 'quantity': 180},
+    'BUburger': {'price': 35.0, 'quantity': 120},
+    'FRfrooti': {'price': 20.0, 'quantity': 80},
+    'SRspring roll': {'price': 40.0, 'quantity': 150},
+    'PApasta': {'price': 25.0, 'quantity': 180},
+    'PTpatties': {'price': 30.0, 'quantity': 150},
+    'CHchai': {'price': 15.0, 'quantity': 300},
+    'COcoffee': {'price': 15.0, 'quantity': 300},
+    'MGmaggi': {'price': 30.0, 'quantity': 300},
+    'GBgarlic bread': {'price': 45.0, 'quantity': 200}
+}
+
+vendor_details = {
+    'Vendor': {'name': 'Vendor', 'address': '123 Main St.', 'phone': '555-555-5555', 'email': 'vendor@example.com'},
+    'Vendor1': {'name': 'Vendor1', 'address': '134 J Block', 'phone': '909877865', 'email': 'vendor1@example.com'},
+    'Vendor2': {'name': 'Vendor2', 'address': '565 I Block', 'phone': '888777666', 'email': 'vendor2@example.com'}
+}
+total_consumption = {}
+
+def create_item(name, price, quantity):
+    menu[name] = {'price': price, 'quantity': quantity}
+
+def read_item(name):
+    if name in menu:
+        return menu[name]
+    else:
+        return None
+
+def update_item(name, price, quantity):
+    if name in menu:
+        menu[name]['price'] = price
+        menu[name]['quantity'] = quantity
+        return True
+    else:
+        return False
+
+def delete_item(name):
+    if name in menu:
+        del menu[name]
+        return True
+    else:
+        return False
+
+while True:
+    print('\nMenu:')
+    print('1. View menu')
+    print('2. Order item')
+    print('3. Add item')
+    print('4. Update item')
+    print('5. Delete item')
+    if id == staff_prefixes:
+        print('5.1. Delivery/ Eat now')
+    elif id == vendor_prefixes:
+        print('5.2. View stock details')
+        print('5.3. Edit stock')
+        print('5.4. View/Edit Vendor Details')
+        print('5.5. View Total Income generated')
+    else:
+        print("6. Exit")
+
+    choice = input('Enter your choice: ')
+
+    if choice == '1':
+        for name, data in menu.items():
+            print('{}: ₹{:.2f}, {} available'.format(name, data['price'], data['quantity']))
+
+    elif choice == '2':
+        name = input('Enter the name of the item you would like to order: ')
+        item = read_item(name)
+        if item:
+            quantity = int(input('Enter the quantity you would like to order: '))
+            if quantity <= item['quantity']:
+                item['quantity'] -= quantity
+                total_order = quantity*item['price']
+                if name in total_consumption:
+                    total_consumption[name] += total_order
+                else:
+                    total_consumption[name] = total_order
+                print('Order successful! Your total cost is ₹{:.2f}.'.format(quantity * item['price']))
+            else:
+                print('Sorry, we do not have enough {}s in stock.'.format(name))
+        else:
+            print('Sorry, we do not have {} on our menu.'.format(name))
+
+    elif choice == '3':
+        name = input('Enter the name of the new item: ')
+        price = float(input('Enter the price of the new item: '))
+        quantity = int(input('Enter the quantity of the new item: '))
+        create_item(name, price, quantity)
+        print('{} added to menu.'.format(name))
+
+    elif choice == '4':
+        name = input('Enter the name of the item you would like to update: ')
+        item = read_item(name)
+        if item:
+            price = float(input('Enter the new price of the item: '))
+            quantity = int(input('Enter the new quantity of the item: '))
+            update_item(name, price, quantity)
+            print('{} updated.'.format(name))
+        else:
+            print('Sorry, we do not have {} on our menu.'.format(name))
+
+    elif choice == '5':
+        name = input('Enter the name of the item you would like to delete: ')
+        item = read_item(name)
+        delete_item(name, price, quantity)
+        print('{} deleted from the order!'.format(name, data['price'], data['quantity']))
+
+    elif choice == '5.1':
+        choice_eating = input('Delivery or Eat now: ')
+        if "Delivery":
+            print(int(input("What time do you want to have your order: ")))
+            print("Okay!")
+        else:
+            print('Will call out your name soon!')
+    elif choice == '5.2':
+        print(data['quantity'])
+    elif choice == '5.3':
+        name  = input("Enter the name of the item you would like update/ add/ delete: ")
+        item = read_item(name)
+        if 'update':
+            update_item(name, price, quantity)
+            print('{} updated.'.format(name))
+        elif 'add':
+            name = input('Enter the name of the new item: ')
+            price = float(input('Enter the price of the new item: '))
+            quantity = int(input('Enter the quantity of the new item: '))
+            create_item(name, price, quantity)
+            print('{} added to menu.'.format(name))
+        else:
+            name = input("Enter the name of the item you would like to delete: ")
+            item = read_item(name)
+            delete_item(name, price, quantity)
+            print('{} deleted from the order!'.format(name, data['price'], data['quantity']))
+    
+    elif choice == '5.4':
+        print(vendor_details)
+        def create_vendor(name, address, phone, email):
+            vendor_details[name] = {'address': address, 'phone': phone, 'email': email}
+        
+        def read_vendor(name):
+            if name in vendor_details:
+                return vendor_details[name]
+            else:
+                return None
+
+        def update_vendor(name, address, phone, email):
+            if name in vendor_details:
+               vendor_details[name]['address'] = address
+               vendor_details[name]['phone'] = phone
+               vendor_details[name]['email'] = email
+               return True
+            else:
+               return False
+
+        def delete_vendor(name):
+            if name in vendor_details:
+               del vendor_details[name]
+               return True
+            else:
+               return False
+        input("Do you want to view/update/delete vendor details? ")
+        if 'view':
+            print(vendor_details)
+        elif 'update':
+            name = input('Enter the name of the vendor you would like to update: ')
+            vendor_details = read_vendor(name)
+            update_vendor(name, 'address', 'phone', 'email')
+            print('{} updated'.format(name))
+        else:
+            name = input('Enter the name of the vendor you would like to delete: ')
+            vendor_details = read_vendor(name)
+            delete_vendor(name, 'address', 'phone', 'email')
+            print('{} deleted!'.format(name, data['address'], data['phone'], data['email']))
+
+    elif choice == '5.5':
+        
+        print(total_consumption)
+        
+        plt.bar(total_consumption.keys(), total_consumption.values())
+        plt.title('Total Consumption')
+        plt.xlabel('Menu Item')
+        plt.ylabel('Total Consumption (₹)')
+        plt.show()
+    
+
+    else:
+        choice == 6
+        print('Thanks for using our services!')
